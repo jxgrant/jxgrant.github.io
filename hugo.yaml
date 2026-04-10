@@ -71,8 +71,8 @@ params:
 
   # home-info mode
   homeInfoParams:
-    Title: "🇬🇧 🇮🇪 🇪🇺 Jamie Grant"
-    Content: Occasionally i will post updates on projects that i do. 
+    Title: "🇬🇧 Jamie Grant"
+    Content: Occasionally i will post things. 
 
   socialIcons:
    # - name: x
