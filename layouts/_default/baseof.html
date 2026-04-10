@@ -15,6 +15,15 @@
 ol,ul {
   margin: 1rem;
 }
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
 </style>
 {{- $theme := site.Params.defaultTheme | default "auto" }}
 {{- if eq $theme "dark" }}
