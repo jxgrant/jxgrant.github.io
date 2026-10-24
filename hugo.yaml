@@ -80,7 +80,7 @@ params:
    # - name: stackoverflow
    #   url: "https://stackoverflow.com"
     - name: github
-      url: "https://github.com/jrgranite"
+      url: "https://github.com/jxgrant"
     - name: "cryptohack"
       url: "https://cryptohack.org/user/northmatrix/"
     - name: "pwncollege"
