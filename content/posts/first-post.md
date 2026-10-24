@@ -19,12 +19,3 @@ My hobbies include but are not limited to:
 3. Hacking
 4. Amateur Radio
 5. Programming
-
-## My goals
-
-My goals for the next few years include the following:
-
-1. Gain a underestanding of quantum mechanics.
-3. Gain pratical experience with soldering and electronics
-4. Earn a RSGB radio intermediate license.
-
