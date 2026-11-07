@@ -92,16 +92,15 @@ The map M takes a matrix, and transforms it cyclicly by shifting the ith rows i 
 
 $$
 M\left(\begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\\\
-b_1 & b_5 & b_9 & b_{13} \\\\
-b_2 & b_6 & b_{10} & b_{14} \\\\
+b_0 & b_4 & b_8 & b_{12} \cr
+b_1 & b_5 & b_9 & b_{13} \cr
+b_2 & b_6 & b_{10} & b_{14} \cr
 b_3 & b_7 & b_{11} & b_{15}
-\end{bmatrix}\right)
-=
+\end{bmatrix}\right) =
 \begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\\\
-b_5 & b_9 & b_{13} & b_1 \\\\
-b_{10} & b_{14} & b_2 & b_6 \\\\
+b_0 & b_4 & b_8 & b_{12} \cr
+b_5 & b_9 & b_{13} & b_1 \cr
+b_{10} & b_{14} & b_2 & b_6 \cr
 b_{15} & b_3 & b_7 & b_{11}
 \end{bmatrix}
 $$
@@ -244,25 +243,23 @@ Now that we have covered the finite field $ GF(2^8) $ we can continue to impleme
 - $ P: \mathbb{B}^{4 \times 1} \to \mathbb{B}^{4 \times 1} $.
 
 $$
-P\left(\begin{bmatrix} s_0 \\\\ s_1 \\\\ s_2 \\\\ s_3 \end{bmatrix}\right)
-=
+P\left(\begin{bmatrix} s_0 \cr s_1 \cr s_2 \cr s_3 \end{bmatrix}\right) =
 \begin{bmatrix}
-02 & 03 & 01 & 01 \\\\
-01 & 02 & 03 & 01 \\\\
-01 & 01 & 02 & 03 \\\\
+02 & 03 & 01 & 01 \cr
+01 & 02 & 03 & 01 \cr
+01 & 01 & 02 & 03 \cr
 03 & 01 & 01 & 02
 \end{bmatrix}
 \begin{bmatrix}
-s_0 \\\\
-s_1 \\\\
-s_2 \\\\
+s_0 \cr
+s_1 \cr
+s_2 \cr
 s_3
-\end{bmatrix}
-=
+\end{bmatrix} =
 \begin{bmatrix}
-(02 \cdot s_0) \oplus (03 \cdot s_1) \oplus (01 \cdot s_2) \oplus (01 \cdot s_3) \\\\
-(01 \cdot s_0) \oplus (02 \cdot s_1) \oplus (03 \cdot s_2) \oplus (01 \cdot s_3) \\\\
-(01 \cdot s_0) \oplus (01 \cdot s_1) \oplus (02 \cdot s_2) \oplus (03 \cdot s_3) \\\\
+(02 \cdot s_0) \oplus (03 \cdot s_1) \oplus (01 \cdot s_2) \oplus (01 \cdot s_3) \cr
+(01 \cdot s_0) \oplus (02 \cdot s_1) \oplus (03 \cdot s_2) \oplus (01 \cdot s_3) \cr
+(01 \cdot s_0) \oplus (01 \cdot s_1) \oplus (02 \cdot s_2) \oplus (03 \cdot s_3) \cr
 (03 \cdot s_0) \oplus (01 \cdot s_1) \oplus (01 \cdot s_2) \oplus (02 \cdot s_3)
 \end{bmatrix}
 $$
@@ -482,17 +479,16 @@ To implement this function we need to take a look back at what the original func
 $$
 M\left(
 \begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\\\
-b_1 & b_5 & b_9 & b_{13} \\\\
-b_2 & b_6 & b_{10} & b_{14} \\\\
+b_0 & b_4 & b_8 & b_{12} \cr
+b_1 & b_5 & b_9 & b_{13} \cr
+b_2 & b_6 & b_{10} & b_{14} \cr
 b_3 & b_7 & b_{11} & b_{15}
 \end{bmatrix}
-\right)
-=
+\right) =
 \begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\\\
-b_{13} & b_1 & b_5 & b_9 \\\\
-b_{10} & b_{14} & b_2 & b_6 \\\\
+b_0 & b_4 & b_8 & b_{12} \cr
+b_{13} & b_1 & b_5 & b_9 \cr
+b_{10} & b_{14} & b_2 & b_6 \cr
 b_7 & b_{11} & b_{15} & b_3
 \end{bmatrix}
 $$
