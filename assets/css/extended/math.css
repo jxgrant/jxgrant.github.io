@@ -1,14 +1,39 @@
-/* Increase inline mathematics size */
-.math {
+
+/* ==========================================
+   MathJax mathematics styling
+   ========================================== */
+
+/* Inline mathematics */
+mjx-container:not([display="true"]) {
+    font-size: 125% !important;
+}
+
+/* All display mathematics */
+mjx-container[display="true"] {
+    font-size: 150% !important;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 1.5em 0 !important;
+}
+
+/* Specifically enlarge matrices */
+mjx-container[display="true"] mjx-mtable {
     font-size: 1.2em;
 }
 
-/* Increase displayed mathematics size */
+/* Improve vertical spacing */
 mjx-container[display="true"] {
-    font-size: 200% !important;
+    line-height: 1.5;
 }
 
-/* Increase inline mathematics size */
-mjx-container:not([display="true"]) {
-    font-size: 115% !important;
+/* Smaller adjustments on mobile */
+@media (max-width: 768px) {
+    mjx-container:not([display="true"]) {
+        font-size: 110% !important;
+    }
+
+    mjx-container[display="true"] {
+        font-size: 120% !important;
+    }
 }
