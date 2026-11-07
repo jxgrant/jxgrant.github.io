@@ -1,39 +1,29 @@
 
-/* ==========================================
-   MathJax mathematics styling
-   ========================================== */
-
 /* Inline mathematics */
-mjx-container:not([display="true"]) {
-    font-size: 125% !important;
+.katex {
+    font-size: 1.2em;
 }
 
-/* All display mathematics */
-mjx-container[display="true"] {
-    font-size: 150% !important;
-    max-width: 100%;
+/* Display mathematics */
+.katex-display {
+    font-size: 1.5em;
     overflow-x: auto;
     overflow-y: hidden;
     margin: 1.5em 0 !important;
 }
 
-/* Specifically enlarge matrices */
-mjx-container[display="true"] mjx-mtable {
+/* Make matrices larger */
+.katex-display .mtable {
     font-size: 1.2em;
 }
 
-/* Improve vertical spacing */
-mjx-container[display="true"] {
-    line-height: 1.5;
-}
-
-/* Smaller adjustments on mobile */
-@media (max-width: 768px) {
-    mjx-container:not([display="true"]) {
-        font-size: 110% !important;
+/* Mobile */
+@media screen and (max-width: 768px) {
+    .katex {
+        font-size: 1.1em;
     }
 
-    mjx-container[display="true"] {
-        font-size: 120% !important;
+    .katex-display {
+        font-size: 1.2em;
     }
 }
