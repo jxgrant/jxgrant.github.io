@@ -6,7 +6,7 @@
 
 /* Display mathematics */
 .katex-display {
-    font-size: 1.3em;
+    font-size: 1.5em;
     overflow-x: auto;
     overflow-y: hidden;
     margin: 1.5em 0 !important;
