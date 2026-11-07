@@ -19,8 +19,7 @@ AES is used everywhere in information technology from SSH to HTTPS
 
 In this tutorial we will be implementing 128 bit Aes encryption
 
-> Do not use any untested encryption in production for a secure and tested alternative use [Aes-Gcm](https://crates.io/crates/aes-gcm)  
-{:.prompt-danger }
+> **Danger:** Do not use any untested encryption in production, for a secure and tested alternative use [Aes-Gcm](https://crates.io/crates/aes-gcm)
 
 ## Encryption Overview
 
@@ -29,17 +28,14 @@ Aes encryption can be separated into 4 steps allowing us to easier understand th
 1. Generating Round Keys
 2. Adding Round Key to block
 3. For each round (except last)
-
-- Substitute Block Bytes with Sbox Values
-- Shift the rows of the Block
-- Mix the Columns
-- Add Round Key to Block
-
+   - Substitute Block Bytes with Sbox Values
+   - Shift the rows of the Block
+   - Mix the Columns
+   - Add Round Key to Block
 4. Final Round(no mix cols)
-
-- Substitute Block Bytes with Sbox Values
-- Shift the rows of the Block
-- Add Round Key to Block
+   - Substitute Block Bytes with Sbox Values
+   - Shift the rows of the Block
+   - Add Round Key to Block
 
 As we can see here there are likely to be some functions which we will need to implement such as
 
@@ -87,37 +83,25 @@ fn sub_bytes(state: &mut [u8;16]) {
 
 ### Shift Rows
 
-the **shift rows** operation can be represented as a map
-
-$$
- M
-$$
-
-, which transforms a
-
-$$
- 4 \times 4
-$$
-
-matrix, defined below:
+the **shift rows** operation can be represented as a map $ M $, which transforms a $ 4 \times 4 $ matrix, defined below:
 
 - $ M: \mathbb{B}^{4 \times 4} \to \mathbb{B}^{4 \times 4} $
-- $ \mathbb{B} $ represents the set of binary digits.$
+- $ \mathbb{B} $ represents the set of binary digits.
 
 The map M takes a matrix, and transforms it cyclicly by shifting the ith rows i places to the left, this is shown below.
 
 $$
 M\left(\begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\
-b_1 & b_5 & b_9 & b_{13} \\
-b_2 & b_6 & b_{10} & b_{14} \\
+b_0 & b_4 & b_8 & b_{12} \\\\
+b_1 & b_5 & b_9 & b_{13} \\\\
+b_2 & b_6 & b_{10} & b_{14} \\\\
 b_3 & b_7 & b_{11} & b_{15}
 \end{bmatrix}\right)
 =
 \begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\
-b_5 & b_9 & b_{13} & b_1 \\
-b_{10} & b_{14} & b_2 & b_6 \\
+b_0 & b_4 & b_8 & b_{12} \\\\
+b_5 & b_9 & b_{13} & b_1 \\\\
+b_{10} & b_{14} & b_2 & b_6 \\\\
 b_{15} & b_3 & b_7 & b_{11}
 \end{bmatrix}
 $$
@@ -205,8 +189,7 @@ before we cover ths transformation we first have to understsnd galios fields $ G
    Thus giving us the following result:  
    $ 255 \times 3 = 26 $ in $ GF(2^8) $
 
-> The operators + and $ \oplus $ are interchangeable ans used only to clarify when XOR is being used  
-> {:.prompt-info }
+> **Note:** The operators + and $ \oplus $ are interchangeable ans used only to clarify when XOR is being used
 
 ### Rust Implementation
 
@@ -241,11 +224,11 @@ fn gal_mul(mut a: u8, mut b: u8) -> u8 {
 
 - **Idea Behind Function**:  
    The above function implements the shift-and-add multiplication algorithm. It repeatedly checks whether the least significant bit of $b(x)$ is set. If it is, it XORs $a(x)$ with the result.
-   
+
    We then multiply $a(x)$ by $x$ by shifting it left and divide $b(x)$ by $x$ by shifting it right.
-   
+
    If $a(x)$ exceeds degree 7 it is reduced modulo the polynomial `0x1b` i.e the reduction polynomial we looked at before.
-   
+
    This repeats until $b(x)$ becomes 0, at which point the result is returned.
 - **Code Trace**:
   1. $ a(x) = x^3+x^2 $, $ b(x) = x^2 + x $, $ r = 0 $
@@ -261,25 +244,25 @@ Now that we have covered the finite field $ GF(2^8) $ we can continue to impleme
 - $ P: \mathbb{B}^{4 \times 1} \to \mathbb{B}^{4 \times 1} $.
 
 $$
-P\left(\begin{bmatrix} s_0 \\ s_1 \\ s_2 \\ s_3 \end{bmatrix}\right)
+P\left(\begin{bmatrix} s_0 \\\\ s_1 \\\\ s_2 \\\\ s_3 \end{bmatrix}\right)
 =
 \begin{bmatrix}
-02 & 03 & 01 & 01 \\
-01 & 02 & 03 & 01 \\
-01 & 01 & 02 & 03 \\
+02 & 03 & 01 & 01 \\\\
+01 & 02 & 03 & 01 \\\\
+01 & 01 & 02 & 03 \\\\
 03 & 01 & 01 & 02
 \end{bmatrix}
 \begin{bmatrix}
-s_0 \\
-s_1 \\
-s_2 \\
+s_0 \\\\
+s_1 \\\\
+s_2 \\\\
 s_3
 \end{bmatrix}
 =
 \begin{bmatrix}
-(02 \cdot s_0) \oplus (03 \cdot s_1) \oplus (01 \cdot s_2) \oplus (01 \cdot s_3) \\
-(01 \cdot s_0) \oplus (02 \cdot s_1) \oplus (03 \cdot s_2) \oplus (01 \cdot s_3) \\
-(01 \cdot s_0) \oplus (01 \cdot s_1) \oplus (02 \cdot s_2) \oplus (03 \cdot s_3) \\
+(02 \cdot s_0) \oplus (03 \cdot s_1) \oplus (01 \cdot s_2) \oplus (01 \cdot s_3) \\\\
+(01 \cdot s_0) \oplus (02 \cdot s_1) \oplus (03 \cdot s_2) \oplus (01 \cdot s_3) \\\\
+(01 \cdot s_0) \oplus (01 \cdot s_1) \oplus (02 \cdot s_2) \oplus (03 \cdot s_3) \\\\
 (03 \cdot s_0) \oplus (01 \cdot s_1) \oplus (01 \cdot s_2) \oplus (02 \cdot s_3)
 \end{bmatrix}
 $$
@@ -357,17 +340,17 @@ Where the exponentiation is performed in $GF(2^8)$.
 1. **Initial Words**: The first four words $W_0, W_1, W_2, W_3$ come directly from the original key $K$.
 2. **Next Words**: For $i = 4, 5, \dots, 43$:
 
-- If $i$ is a multiple of 4, calculate:
+   - If $i$ is a multiple of 4, calculate:
 
-$$
-W_i = W_{i-4} \oplus \text{SubWord}(\text{ShiftWord}(W_{i-1})) \oplus RCON[i/4]
-$$
+   $$
+   W_i = W_{i-4} \oplus \text{SubWord}(\text{ShiftWord}(W_{i-1})) \oplus RCON[i/4]
+   $$
 
-- Otherwise:
+   - Otherwise:
 
-$$
-W_i = W_{i-4} \oplus W_{i-1}
-$$
+   $$
+   W_i = W_{i-4} \oplus W_{i-1}
+   $$
 
 ```rust
 //Here is a pre-computed list that contains the first byte for each Round Constant
@@ -499,17 +482,17 @@ To implement this function we need to take a look back at what the original func
 $$
 M\left(
 \begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\
-b_1 & b_5 & b_9 & b_{13} \\
-b_2 & b_6 & b_{10} & b_{14} \\
+b_0 & b_4 & b_8 & b_{12} \\\\
+b_1 & b_5 & b_9 & b_{13} \\\\
+b_2 & b_6 & b_{10} & b_{14} \\\\
 b_3 & b_7 & b_{11} & b_{15}
 \end{bmatrix}
 \right)
 =
 \begin{bmatrix}
-b_0 & b_4 & b_8 & b_{12} \\
-b_{13} & b_1 & b_5 & b_9 \\
-b_{10} & b_{14} & b_2 & b_6 \\
+b_0 & b_4 & b_8 & b_{12} \\\\
+b_{13} & b_1 & b_5 & b_9 \\\\
+b_{10} & b_{14} & b_2 & b_6 \\\\
 b_7 & b_{11} & b_{15} & b_3
 \end{bmatrix}
 $$
@@ -684,3 +667,4 @@ mod tests {
         assert_eq!(ciphertext, expected);
     }
 }
+```
