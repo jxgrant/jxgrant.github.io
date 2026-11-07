@@ -1,6 +1,7 @@
 ---
 date:  "2025-08-19T23:26:01+01:00"
 draft: false
+math: true
 categories: 
  - Cryptography
 title: "Implementing AES-128 in Rust: From Finite Fields to Encryption"
