@@ -1,23 +1,18 @@
 
 /* Inline mathematics */
 .katex {
-    font-size: 1.2em;
+    font-size: 1.0em;
 }
 
 /* Display mathematics */
 .katex-display {
-    font-size: 1.5em;
+    font-size: 1.3em;
     overflow-x: auto;
     overflow-y: hidden;
     margin: 1.5em 0 !important;
 }
 
-/* Make matrices larger */
-.katex-display .mtable {
-    font-size: 1.2em;
-}
-
-/* Mobile */
+/* Mobile 
 @media screen and (max-width: 768px) {
     .katex {
         font-size: 1.1em;
@@ -26,4 +21,4 @@
     .katex-display {
         font-size: 1.2em;
     }
-}
+}*/
