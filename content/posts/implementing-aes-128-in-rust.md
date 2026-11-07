@@ -102,7 +102,7 @@ $$
 matrix, defined below:
 
 - $ M: \mathbb{B}^{4 \times 4} \to \mathbb{B}^{4 \times 4} $
-- $ \mathbb{B} $ represents the set of binary digits.
+- $ \mathbb{B} $ represents the set of binary digits.$
 
 The map M takes a matrix, and transforms it cyclicly by shifting the ith rows i places to the left, this is shown below.
 
