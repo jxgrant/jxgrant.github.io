@@ -5,7 +5,7 @@
 
 /* Increase displayed mathematics size */
 mjx-container[display="true"] {
-    font-size: 125% !important;
+    font-size: 200% !important;
 }
 
 /* Increase inline mathematics size */
