@@ -4,7 +4,7 @@ draft: false
 math: true
 categories: 
  - Cryptography
-title: "Implementing AES-128 in Rust: From Finite Fields to Encryption"
+title: "Implementing AES-128 in Rust"
 ---
 
 # Implementing AES-128 in Rust: From Finite Fields to Encryption
