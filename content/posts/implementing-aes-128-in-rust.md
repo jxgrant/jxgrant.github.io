@@ -7,44 +7,53 @@ categories:
 title: "Implementing AES-128 in Rust"
 ---
 
-# Implementing AES-128 in Rust: From Finite Fields to Encryption
+## AES in Rust
 
-## Introduction
+### Intro
 
-The Advanced Encryption Standard (AES), based on the Rijndael cipher, is a symmetric-key block cipher standardised by the US National Institute of Standards and Technology (NIST) in 2001. AES always operates on 128-bit blocks and supports three key sizes: 128, 192 and 256 bits. These variants use 10, 12 and 14 rounds respectively.
-
-AES is widely used in security protocols and applications. It is important to distinguish the block cipher itself from a *mode of operation*: AES defines how to transform one 128-bit block, while modes such as CBC, CTR and GCM specify how to use a block cipher to protect longer messages.
+AES (advanced encryption standard) also known as Rijndael is a specification for the encryption of electronic data established by the US National institute of standards and technology NIST in 2001.  
+AES is a block cipher with a block size of 128 bits that supports 3 key sizes of length 128,192 and 256 bits.  
+AES is used everywhere in information technology from SSH to HTTPS
 
 ### Project Goal
 
-In this tutorial, I implement AES-128 block encryption and decryption in Rust. The implementation covers the AES round transformations, key expansion and the inverse transformations used for decryption. It is intended as an educational exercise, not as a general-purpose encryption library.
+In this tutorial we will be implementing 128 bit Aes encryption
 
-> **Security warning:** Do not use this implementation to protect real data. It has not been independently audited and does not provide an authenticated encryption interface or a complete message-encryption mode. For production Rust applications, use a maintained, reviewed implementation such as the [`aes-gcm` crate](https://crates.io/crates/aes-gcm).
+> Do not use any untested encryption in production for a secure and tested alternative use [Aes-Gcm](https://crates.io/crates/aes-gcm)  
+{:.prompt-danger }
 
-## Encryption overview
+## Encryption Overview
 
-AES-128 uses an initial key addition followed by 10 rounds. The first nine rounds apply four transformations:
+Aes encryption can be separated into 4 steps allowing us to easier understand the problem.
 
-1. **SubBytes** — substitute each byte using the AES S-box.
-2. **ShiftRows** — cyclically shift the rows of the state.
-3. **MixColumns** — apply a linear transformation to each column.
-4. **AddRoundKey** — XOR the state with the round key.
+1. Generating Round Keys
+2. Adding Round Key to block
+3. For each round (except last)
 
-The tenth and final round omits MixColumns and applies SubBytes, ShiftRows and AddRoundKey, in that order. Before the rounds begin, the initial key is added to the state.
+- Substitute Block Bytes with Sbox Values
+- Shift the rows of the Block
+- Mix the Columns
+- Add Round Key to Block
 
-The implementation is organised around the following functions:
+4. Final Round(no mix cols)
 
-- `sub_bytes()`
-- `shift_rows()`
-- `mix_cols()`
-- `add_round_key()`
-- `generate_round_keys()`
+- Substitute Block Bytes with Sbox Values
+- Shift the rows of the Block
+- Add Round Key to Block
 
-I will introduce each transformation, explain the relevant mathematics and then show its Rust implementation.
+As we can see here there are likely to be some functions which we will need to implement such as
 
-### SubBytes
+- sub_bytes()
+- shift_rows()
+- mix_cols()
+- add_round_keys()
+- generate_round_keys()
 
-The AES substitution box (S-box) is a bijection from the 256 possible byte values to themselves. It provides the non-linear part of the cipher, helping AES resist linear and differential cryptanalysis. The S-box is constructed using multiplicative inverses in the finite field $GF(2^8)$ (with zero handled separately), followed by an affine transformation over $GF(2)$. The table below contains the resulting substitution values.
+In the next step you will learn to implement these functions, as well as understandnig what they do and any maths required to understand it.
+
+### Sub Bytes
+
+The SBOX (substituon box) is a bijective map that maps each input byte to a corrosponding output byte below is this substitution box that is computed in such a way that it adds nonlinearity thus significantly improving resilliance to linear and differential cryptoanalysis attacks.
 
 ```rust
 const SBOX: [u8; 256] = [
@@ -63,11 +72,10 @@ const SBOX: [u8; 256] = [
     0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
     0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
     0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
-    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
-];
+    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb,0x16]
 ```
 
-The function below iterates over the 16-byte state and replaces each byte with the corresponding S-box value. The state is modified in place through a mutable reference.
+here is the rust code which mutably iterates over the block substituting each byte for the corrosponding output value defined by the sbox.
 
 ```rust
 fn sub_bytes(state: &mut [u8;16]) {
@@ -79,31 +87,44 @@ fn sub_bytes(state: &mut [u8;16]) {
 
 ### Shift Rows
 
-The **ShiftRows** operation can be represented as a map $M$ acting on the AES state, a $4\times4$ matrix whose entries are bytes:
-
-$M : GF(2^8)^{4\times4} \to GF(2^8)^{4\times4}.$
-
-The first row is unchanged. The second, third and fourth rows are cyclically shifted left by one, two and three byte positions respectively. With the state stored column by column in the one-dimensional array, the transformation is shown below.
+the **shift rows** operation can be represented as a map
 
 $$
-\begin{aligned}
+ M
+$$
+
+, which transforms a
+
+$$
+ 4 \times 4
+$$
+
+matrix, defined below:
+
+- $ M: \mathbb{B}^{4 \times 4} \to \mathbb{B}^{4 \times 4} $
+- $ \mathbb{B} $ represents the set of binary digits.
+
+The map M takes a matrix, and transforms it cyclicly by shifting the ith rows i places to the left, this is shown below.
+
+$$
 M\left(\begin{bmatrix}
 b_0 & b_4 & b_8 & b_{12} \\
 b_1 & b_5 & b_9 & b_{13} \\
 b_2 & b_6 & b_{10} & b_{14} \\
 b_3 & b_7 & b_{11} & b_{15}
 \end{bmatrix}\right)
-&=
+=
 \begin{bmatrix}
 b_0 & b_4 & b_8 & b_{12} \\
 b_5 & b_9 & b_{13} & b_1 \\
 b_{10} & b_{14} & b_2 & b_6 \\
 b_{15} & b_3 & b_7 & b_{11}
 \end{bmatrix}
-\end{aligned}
 $$
 
-ShiftRows moves bytes between columns. Together with MixColumns, it contributes to **diffusion**: after the transformations are applied across successive rounds, each input byte influences many output bytes. The Rust function below performs the row shifts in place.
+this helps increase the complexity of the cipher by ensuring the influence of each byte is spread across multiple columns  
+this combined with the function mix_cols which will be covered later helps contribute to the diffusion of the cipher  
+below i have written this transformation in rust.
 
 ```rust
 fn shift_rows(state: &mut [u8; 16]) {
@@ -127,56 +148,67 @@ fn shift_rows(state: &mut [u8; 16]) {
 }
 ```
 
-The function receives a mutable reference to the state. It first copies the original state into `temp`, then reads from that copy while writing the shifted values back into `state`. Using a temporary copy prevents earlier assignments from overwriting values that are still needed.
+this works by passing a mutable reference the block in its current state and creating a temporary copy where the values can be read from and assigned to the state  
+which changes it in place.
 
-## MixColumns
+## Mix Cols
 
-The **MixColumns** operation applies the same linear transformation to each four-byte column of the state. Its matrix coefficients and arithmetic are defined in the finite field $GF(2^8)$. Before writing the transformation, it is useful to review how this finite field works.
+The **mix cols** operation can be represented as linear transformation $ P $ in the finite field $ GF(2^8) $ that transforms each column in the block  
+before we cover ths transformation we first have to understsnd galios fields $ GF(2^8) $.
 
-### The finite field $GF(2^8)$
+### $ GF(2^8) $ Galios Field
 
-- $GF(2^8)$ is a finite field containing $2^8=256$ elements.
-- Each element can be represented by an 8-bit byte, or equivalently by a binary polynomial of degree at most 7.
-- Addition is bitwise XOR. For example, adding two field elements $a$ and $b$ is written $a\oplus b$.
-- Multiplication is polynomial multiplication over $GF(2)$ followed by reduction modulo the irreducible polynomial
-  $m(x)=x^8+x^4+x^3+x+1$.
-- A byte with bits $b_7b_6\ldots b_0$ represents the polynomial
-  $b_7x^7+b_6x^6+\cdots+b_1x+b_0$.
+- $ GF(2^8) $ is a finite field with $ 2^8 $ elements.
+- The elements of this field are 8 bit numbers (bytes) represented as binary polynomials.
+- Addition in $ GF(2^8) $ is defined as bitwise XOR between two bytes as $ a \oplus b $.
+- Multiplication in $ GF(2^8) $ involves standard polynomial multiplication followed by a reduction moduolo an irreducible polynomial of degree 8 one such polynomial is $ x^8 + x^4 + x^3 +x + 1 $
+- Relation between binary form and polynomial form:  
+  $ b_7b_6b_5b_4b_3b_2b_1b_0 = b_7x^7 + b_6x^6 + b_5x^5 + b_4x^4 + b_3x^3 + b_2x^2 + b_1x + b_0 $
 
-The modulus is what keeps every result representable by a byte. In the AES field, the relation $x^8\equiv x^4+x^3+x+1$ is used during reduction.
+### Example in $ GF(2^8) $
 
-### Example: multiplying in $GF(2^8)$
+1. **Problem Setup**:  
+   We will now show the multiplication of 255 by 3 in $GF(2^8)$:  
+   $255 \times 3$
 
-Consider the product $255\cdot3$ in the AES field.
+2. **Polynomial Form**:  
+   We will now write each in its polynomial from:  
+   $255 = x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x + 1$  
+   $3 = x + 1$
 
-1. **Write the bytes as polynomials.** The byte 255 is
-   $x^7+x^6+x^5+x^4+x^3+x^2+x+1$, and the byte 3 is $x+1$.
+3. **Polynomial Multiplication**:  
+   We will now multiply both polynomias together:  
+   $ a(x) = x^7+x^6+x^5+x^4+x^3+x^2+x+1 $  
+   $ b(x) = x+1 $  
+   $ a(x)b(x) = x^8+x^7+x^6+x^5+x^4+x^3+x^2+x+x^7+x^6+x^5+x^4+x^3+x^2+x^1+1 $
 
-2. **Multiply over $GF(2)$.** Let
-   $a(x)=1+x+x^2+\cdots+x^7$. Then
-   $$
-   a(x)(x+1)=x^8+1,
-   $$
-   because each intermediate power appears twice and cancels in characteristic two.
+4. **Simplification**:  
+   We can now rearange this and use the fact that $ x^n \oplus x^n = 0 $:  
+   $x^8 + (x^7\oplus x^7) +(x^6\oplus x^6)+(x^5\oplus x^5)+(x^4\oplus x^4)+(x^3\oplus x^3)+(x^2\oplus x^2)+(x^1\oplus x^1) + 1$  
+   This will give us the following:  
+   $ x^8 + 1 $
 
-3. **Reduce modulo the AES polynomial.** Since
-   $m(x)=x^8+x^4+x^3+x+1=0$ in the field,
-   $$
-   x^8\equiv x^4+x^3+x+1.
-   $$
-   Therefore,
-   $$
-   x^8+1\equiv x^4+x^3+x.
-   $$
+5. **Modulo Reduction**:  
+   But this does not belong in the field $ GF(2^8) $ so we must reduce modulo the polynomial:  
+   $ x^8+x^4+x^3+x^1+1 $  
+   We can use the following equivilance to reduce the polynomial:  
+   $ x^8 \equiv x^4 + x^3 + x^1 + 1 \pmod{x^8+x^4+x^3+x^1+1} $
 
-4. **Convert back to a byte.** The polynomial $x^4+x^3+x$ has binary representation
-   `00011010`, hexadecimal representation `0x1A`, and decimal value 26.
+6. **Simplification**:  
+   This is the reduced polynomial:  
+   $ x^4 + x^3 +x^1 + 1 + 1 $  
+   We can now simplify it using additive property of the field:  
+   $ x^4+x^3+x^1+(1 \oplus 1) = x^4+x^3+x $
 
-Thus, in the AES field, $255\cdot3=26$. This is not ordinary integer multiplication; it is multiplication followed by reduction in $GF(2^8)$.
+7. **Converting**:  
+   Converting to binary gives us `00011010` and in denary `26`:  
+   Thus giving us the following result:  
+   $ 255 \times 3 = 26 $ in $ GF(2^8) $
 
-### Rust implementation
+> The operators + and $ \oplus $ are interchangeable ans used only to clarify when XOR is being used  
+> {:.prompt-info }
 
-The following routine uses the usual shift-and-XOR method for multiplication in $GF(2^8)$. It examines the bits of `b` from least significant to most significant. When a bit is set, the current value of `a` is XORed into the result. At each iteration, `a` is multiplied by $x$ (with reduction if its degree would exceed 7), and `b` is shifted right.
+### Rust Implementation
 
 ```rust
 fn gal_mul(mut a: u8, mut b: u8) -> u8 {
@@ -205,32 +237,32 @@ fn gal_mul(mut a: u8, mut b: u8) -> u8 {
 }
 ```
 
-### How the multiplication routine works
+### Explanation of Galios Multiplication Function Gal_Mul()
 
-The routine is a bitwise version of polynomial multiplication. At each iteration, the least significant bit of `b` determines whether the current `a` contributes to the result. The routine then shifts `b` right, which moves to its next coefficient, and multiplies `a` by $x$ by shifting it left.
+- **Idea Behind Function**:  
+   The above function implements the shift-and-add multiplication algorithm. It repeatedly checks whether the least significant bit of $b(x)$ is set. If it is, it XORs $a(x)$ with the result.
+   
+   We then multiply $a(x)$ by $x$ by shifting it left and divide $b(x)$ by $x$ by shifting it right.
+   
+   If $a(x)$ exceeds degree 7 it is reduced modulo the polynomial `0x1b` i.e the reduction polynomial we looked at before.
+   
+   This repeats until $b(x)$ becomes 0, at which point the result is returned.
+- **Code Trace**:
+  1. $ a(x) = x^3+x^2 $, $ b(x) = x^2 + x $, $ r = 0 $
+  2. $ a(x) = x^4 + x^3 $, $ b(x) = x + 1 $, $ r = 0 $
+  3. $ a(x) = x^5+x^4 $, $ b(x) = 1 $, $ r = x^4+x^3 $
+  4. $ a(x) = x^6+x^5 $, $ b(x) = 0 $, $ r = x^5+x^3 $
+  5. $ b(x) = 0 $ so $ r $ is returned $ r = x^5+x^3 $
 
-If the high bit of `a` was set before the shift, the result would contain an $x^8$ term. XORing with `0x1b` performs the required reduction, because `0x1b` represents $x^4+x^3+x+1$, the lower-degree part of the AES modulus after substituting for $x^8$.
+## Now onto the Transformation
 
-The process ends when all bits of `b` have been processed. The accumulated XOR is the product in $GF(2^8)$.
+Now that we have covered the finite field $ GF(2^8) $ we can continue to implement the transformation $ P $ which is defined below:
 
-#### Worked trace
-
-1. $ a(x) = x^3+x^2 $, $ b(x) = x^2 + x $, $ r = 0 $
-2. $ a(x) = x^4 + x^3 $, $ b(x) = x + 1 $, $ r = x^3+x^2 $
-3. $ a(x) = x^5+ x^4 $, $ b(x) = 1 $, $ r = x^3 + x^2 + x^4 + x^3 $
-4. $ a(x) = x^6+x^5 $, $ b(x) = 0 $, $ r = x^3 + x^2 + x^4 + x^3 + x^5 + x^4 $
-5. $ b(x) = 0 $ so $ r $ is returned $ r = x^3 + x^2 + x^4 + x^3 +x^5 + x^4 = x^5 + (x^4 \oplus x^4) + (x^3 \oplus x^3) + x^2 = x^5 + 0 + 0 + x^2 = x^5 + x^2 $
-
-## The MixColumns transformation
-
-Now that the field arithmetic is defined, we can describe MixColumns. For a column with entries $s_0,s_1,s_2,s_3$, the AES transformation is multiplication by the following matrix, with all arithmetic performed in $GF(2^8)$:
-
-$ P: \mathbb{B}^{4 \times 1} \to \mathbb{B}^{4 \times 1} $
+- $ P: \mathbb{B}^{4 \times 1} \to \mathbb{B}^{4 \times 1} $.
 
 $$
-\begin{aligned}
 P\left(\begin{bmatrix} s_0 \\ s_1 \\ s_2 \\ s_3 \end{bmatrix}\right)
-&=
+=
 \begin{bmatrix}
 02 & 03 & 01 & 01 \\
 01 & 02 & 03 & 01 \\
@@ -243,16 +275,16 @@ s_1 \\
 s_2 \\
 s_3
 \end{bmatrix}
-&=
+=
 \begin{bmatrix}
 (02 \cdot s_0) \oplus (03 \cdot s_1) \oplus (01 \cdot s_2) \oplus (01 \cdot s_3) \\
 (01 \cdot s_0) \oplus (02 \cdot s_1) \oplus (03 \cdot s_2) \oplus (01 \cdot s_3) \\
 (01 \cdot s_0) \oplus (01 \cdot s_1) \oplus (02 \cdot s_2) \oplus (03 \cdot s_3) \\
 (03 \cdot s_0) \oplus (01 \cdot s_1) \oplus (01 \cdot s_2) \oplus (02 \cdot s_3)
-\end{bmatrix}\end{aligned}
+\end{bmatrix}
 $$
 
-The Rust implementation below applies this matrix independently to each of the four columns.
+below i have written this operation in rust.
 
 ```rust
 fn mix_cols(state: &mut [u8; 16]) {
@@ -274,9 +306,9 @@ fn mix_cols(state: &mut [u8; 16]) {
 }
 ```
 
-## AddRoundKey
+## Add Round Key
 
-**AddRoundKey** XORs each of the 16 state bytes with the corresponding byte of the 128-bit round key. XOR is appropriate here because addition in $GF(2^8)$ is bitwise XOR.
+Adding the **Round Key** is fairly simple it is just the 128 bit block XOR with the 128 bit round key
 
 ```rust
 fn add_round_key(state: &mut [u8; 16], key: &[u8; 16]) {
@@ -286,38 +318,59 @@ fn add_round_key(state: &mut [u8; 16], key: &[u8; 16]) {
 }
 ```
 
-## The AES-128 key schedule
+## AES-128 Key Schedule
 
-AES-128 expands the original 128-bit key into 11 round keys: the initial key plus one key for each of the 10 rounds. Each round key is 128 bits.
+In AES-128, the key schedule expands the initial 128-bit key into 11 round keys (for 10 rounds), each 128 bits long.
 
-### Key expansion overview
+### Key Expansion Overview
 
-The original key is represented as four 32-bit words, $W_0,W_1,W_2,W_3$. The expanded key contains 44 words in total, grouped into 11 round keys of four words each.
+- **Initial key**: $K$ is 128 bits, represented as four 32-bit words $W_0, W_1, W_2, W_3$.
+- **Round keys**: The original key is the first round key and each subsequent round key is generated as 4 new words
+- **Total words**: $4 \times 11 = 44$ words in total, with 4 words for each of the 11 round keys.
 
-### Key expansion steps
+### Key Expansion Steps
 
-The key schedule uses three operations:
+The AES key schedule uses:
 
-- **SubWord:** apply the AES S-box independently to each byte of a 32-bit word.
-- **RotWord:** cyclically rotate a word left by one byte:
-  $\operatorname{RotWord}([b_0,b_1,b_2,b_3])=[b_1,b_2,b_3,b_0]$.
-- **Round constant:** XOR a round-dependent constant into the first byte of the transformed word. Its first byte is a successive power of $x$ in $GF(2^8)$, beginning with `0x01`; the ten values are listed in `RCON` below.
+1. **SubWord**: A function that applies the AES SBOX (non-linear substitution) to each byte of the word.
 
-### Round-key generation
+$$
+\text{SubWord}(W) = \text{Sbox}(W)
+$$
 
-**Initial words:** The first four words $W_0, W_1, W_2, W_3$ come directly from the original key $K$.
-**Next words:** For $i = 4, 5, \dots, 43$:
+2. **ShiftWord**: A function that cyclicaly rotates the bytes of a word left by one position.
 
-If $i$ is a multiple of 4, calculate:
+$$
+\text{ShiftWord}([b_0, b_1, b_2, b_3]) = [b_1, b_2, b_3, b_0]
+$$
 
-$W_i = W_{i-4} \oplus \operatorname{SubWord}(\operatorname{RotWord}(W_{i-1})) \oplus RCON[i/4]$
+3. **Round Constant (RCON)**: A constant that is XORed with a word.
 
-Otherwise:
+$$
+RCON[i] = [0x02^{i-1}, 0x00, 0x00, 0x00]
+$$
 
-$W_i = W_{i-4} \oplus W_{i-1}$
+Where the exponentiation is performed in $GF(2^8)$.
+
+### Round Key Generation
+
+1. **Initial Words**: The first four words $W_0, W_1, W_2, W_3$ come directly from the original key $K$.
+2. **Next Words**: For $i = 4, 5, \dots, 43$:
+
+- If $i$ is a multiple of 4, calculate:
+
+$$
+W_i = W_{i-4} \oplus \text{SubWord}(\text{ShiftWord}(W_{i-1})) \oplus RCON[i/4]
+$$
+
+- Otherwise:
+
+$$
+W_i = W_{i-4} \oplus W_{i-1}
+$$
 
 ```rust
-// First-byte values of the ten AES-128 round constants.
+//Here is a pre-computed list that contains the first byte for each Round Constant
 const RCON: [u8; 10] = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36];
 
 fn generate_round_keys(key: &[u8; 16]) -> [[u8; 16]; 11] {
@@ -343,7 +396,7 @@ fn generate_round_keys(key: &[u8; 16]) -> [[u8; 16]; 11] {
             // which is SubWord(ShiftWord(W_i)) xor RCON[i] thus mirroring the equation above
             round_keys[i][j] = round_keys[i - 1][j] ^ temp[j];
             //for the next 3 words with simply XOR with the previous word of the current round key
-            //and the word in the same position on the previous round keys (W_i-1 and W_i_4) correspondingly
+            //and the word in the same position on the previous round keys (W_i-1 and W_i_4) corrospondingly
             // we repeat this 4 times for each byte of the 4 words
             round_keys[i][j + 4] = round_keys[i - 1][j + 4] ^ round_keys[i][j];
             round_keys[i][j + 8] = round_keys[i - 1][j + 8] ^ round_keys[i][j + 4];
@@ -355,9 +408,9 @@ fn generate_round_keys(key: &[u8; 16]) -> [[u8; 16]; 11] {
 }
 ```
 
-## Encrypting a block
+## Encrypting A Block
 
-We can now combine the transformations to implement AES-128 encryption of a single 128-bit block. The function takes the plaintext block and key as mutable byte arrays; after the call, the block contains the ciphertext.
+We can now combine this all together to implement the block encryption function shown below
 
 ```rust
 pub fn block_encrypt(state: &mut [u8; 16], key: &[u8; 16]) {
@@ -375,39 +428,38 @@ pub fn block_encrypt(state: &mut [u8; 16], key: &[u8; 16]) {
 }
 ```
 
-## Decryption
+## Decryption Overview
 
-To recover the original plaintext, we need to reverse the encryption transformations. AddRoundKey is its own inverse because XORing with the same round key twice restores the original byte. The other transformations have corresponding inverse operations:
-
-- `inv_sub_bytes()`
-- `inv_shift_rows()`
-- `inv_mix_cols()`
-
-The decryption routine applies the round keys in reverse order and uses the inverse transformations in the order required to undo each encryption round.
+Now that we can encrypt this data we have finished this part of the cipher, but without a way to restore the ciphertext back to plaintext this entire function is useless  
+that is why next we will work on decrypting a block todo this we will need to implement all the above functions inverse operations, this includes
 
 - add_round_key
 - inv_sub_bytes
 - inv_shift_rows
 - inv_mix_cols
 
-The inverse transformations undo the corresponding encryption steps. AddRoundKey needs no separate inverse function: XOR is self-inverse, as shown below.
+Fortunatley this is possible with minor adjustments to the normalfunctions, additionally the function add_key is its own inverse the proof for this is below
 
-### Why AddRoundKey is its own inverse
+### Add_key Inverse Proof
 
-For bits $b,k\in\{0,1\}$, XOR satisfies
-$$
-(b\oplus k)\oplus k
-=b\oplus(k\oplus k)
-=b\oplus0
-=b.
-$$
-The same identity applies byte by byte to the state and round key. Therefore, applying AddRoundKey twice with the same key restores the original state.
+The Add_key function simply performs Xor operation on each bit from the block with each bit of the key as both are 128 bits, so to prove this function is self invertible all we need to show is that xor itself is self invertible, this is shown below.  
+suppose b and k are both elements from the set {0,1}, then xor is represented below  
+$ b \oplus k $  
+now when we again xor b with k again we get the following  
+$ (b \oplus k) \oplus k $  
+since xor is associotive this is the same as the following  
+$ b \oplus (k \oplus k) $  
+but we know that anything value xored with itself is 0 so this is the same as  
+$ b \oplus 0 $  
+again using the above fact this is the same as  
+$ b $  
+This proves that xor is self invertible and thus the add_key function
 
-We can now implement the inverse transformations.
+Now we will begin implementing the inverse of the functions specified above.
 
-### InvSubBytes
+### Inv_Sub_Bytes
 
-The inverse S-box reverses the substitution performed by the forward S-box. It can be constructed by reversing the lookup table: if `SBOX[i] = j`, then `INVSBOX[j] = i`. The table below contains those inverse values.
+to implement this function we will first need to construct the inverse of the SBOX this can simply be achieved by setting the index of each value in the sbox to its value and the value of each value in the sbox to its index below is a table constructed this way
 
 ```rust
 const INVSBOX: [u8; 256] = [
@@ -430,7 +482,7 @@ const INVSBOX: [u8; 256] = [
 ];
 ```
 
-As with the forward transformation, decryption applies the inverse lookup independently to each byte of the state:
+Now we can simply iterate through the block again substituting each byte again, below is this function
 
 ```rust
 fn inv_sub_bytes(state: &mut [u8; 16]) {
@@ -440,12 +492,12 @@ fn inv_sub_bytes(state: &mut [u8; 16]) {
 }
 ```
 
-### InvShiftRows
+### Inv Sift Rows
 
-InvShiftRows reverses ShiftRows by cyclically shifting the second, third and fourth rows right by one, two and three byte positions respectively. The first row remains unchanged.
+To implement this function we need to take a look back at what the original function did we can recall that it shifted the ith row i places to the left, so the inverse of this would be shifting th ith row i places to the right note that indexing the rows start at 0 so the first row is shifted 0 rows to the right.
 
 $$
-\begin{aligned}M\left(
+M\left(
 \begin{bmatrix}
 b_0 & b_4 & b_8 & b_{12} \\
 b_1 & b_5 & b_9 & b_{13} \\
@@ -453,13 +505,13 @@ b_2 & b_6 & b_{10} & b_{14} \\
 b_3 & b_7 & b_{11} & b_{15}
 \end{bmatrix}
 \right)
-&=
+=
 \begin{bmatrix}
 b_0 & b_4 & b_8 & b_{12} \\
 b_{13} & b_1 & b_5 & b_9 \\
 b_{10} & b_{14} & b_2 & b_6 \\
 b_7 & b_{11} & b_{15} & b_3
-\end{bmatrix}\end{aligned}
+\end{bmatrix}
 $$
 
 ```rust
@@ -484,9 +536,9 @@ fn inv_shift_rows(state: &mut [u8; 16]) {
 }
 ```
 
-### InvMixColumns
+### Inverse Mix Cols
 
-InvMixColumns applies the inverse of the MixColumns matrix to each state column. Its coefficients are also elements of $GF(2^8)$, and all multiplication and addition are performed in that field. The inverse matrix is encoded directly in the implementation below.
+The inverse mix cols function is simply a linear transformation $ M^{-1} $ applied to the current state of the block calculating this map is out of the scope here but it is simply the inverse of M in the field $ GF(2^8) $ below is the code that we can use to achieve this
 
 ```rust
 fn inv_mix_cols(state: &mut [u8; 16]) {
@@ -512,9 +564,10 @@ fn inv_mix_cols(state: &mut [u8; 16]) {
 }
 ```
 
-### Decrypting a block
+### Decrypting the Block
 
-Decryption starts by adding the final round key (index 10) to the ciphertext. It then processes the remaining round keys in reverse order, applying InvShiftRows, InvSubBytes, AddRoundKey and InvMixColumns. The final inverse round omits InvMixColumns and finishes by adding the original key (index 0). This reverses the encryption process and recovers the plaintext.
+Now we have made all the operations that need to be appliedin the decryption step we can simply implement it note that in the decrypting process we are just applying the operations in the opposite order of the enrcyption processes thus undoing it and returning to our original plaintext  
+so instead of starting at round 1 we start at round 11 (index 10 because 0 based indexing) for the initial adding of the round key and then iterate the main block with round keys 10 to 2 and then apply the final round 1, this is the inverse of the enrcypting function and thus will return us with our original block
 
 ```rust
 pub fn block_decrypt(state: &mut [u8; 16], key: &[u8; 16]) {
@@ -532,9 +585,10 @@ pub fn block_decrypt(state: &mut [u8; 16], key: &[u8; 16]) {
 }
 ```
 
-## Testing and conclusion
+## Finishing up
 
-The implementation now contains the forward and inverse transformations needed to encrypt and decrypt one AES-128 block. The tests below check the transformations and compare the encryption and decryption routines against a known-answer test vector from the NIST AES specification, [FIPS 197](https://csrc.nist.gov/pubs/fips/197/final). Passing this vector is a useful correctness check, although it is not a substitute for extensive testing, independent review or a production cryptographic library.
+Now we have completely finished implementing the encryption and decryption of blocks and can now being testing our application below are a series of tests written to ensure that each operation works correctly as well as using some test vectors from this nist pdf  
+<https://csrc.nist.gov/files/pubs/fips/197/final/docs/fips-197.pdf>
 
 ```rust
 #[cfg(test)]
@@ -544,11 +598,30 @@ mod tests {
     use super::*;
     #[test]
     fn test_shift_rows() {
-        let original = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-        let expected = [0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12, 1, 6, 11];
-        let mut state = original;
+        let mut state = [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+            12, 13, 14, 15,
+        ];
+
+        let expected = [
+            0, 5, 10, 15,
+            4, 9, 14, 3,
+            8, 13, 2, 7,
+            12, 1, 6, 11,
+        ];
+
+        let original = [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+            12, 13, 14, 15,
+        ];
+
         shift_rows(&mut state);
         assert_eq!(state, expected);
+
         inv_shift_rows(&mut state);
         assert_eq!(state, original);
     }
@@ -562,26 +635,39 @@ mod tests {
     }
     #[test]
     fn test_gal_mul() {
-        // Small field-multiplication checks.
+        //verified by hand
         assert_eq!(gal_mul(2, 2), 4);
         assert_eq!(gal_mul(6, 3), 10);
         assert_eq!(gal_mul(7, 12), 36);
         assert_eq!(gal_mul(12, 12), 80);
     }
     #[test]
-    fn test_mix_columns() {
-        // Example MixColumns input/output from the AES specification.
-        let original = hex!("d4bf5d30e0b452aeb84111f11e2798e5");
-        let expected = hex!("046681e5e0cb199a48f8d37a2806264c");
-        let mut state = original;
+    fn test_col_shift() {
+        let mut state = [
+            0xd4, 0xbf, 0x5d, 0x30,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+        ];
+
+        let original = state;
+
+        let expected = [
+            0x04, 0x66, 0x81, 0xe5,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+        ];
+
         mix_cols(&mut state);
         assert_eq!(state, expected);
+
         inv_mix_cols(&mut state);
         assert_eq!(state, original);
     }
     #[test]
     fn test_encryption() {
-        // Known-answer test vector from NIST FIPS 197.
+        //values taken from test vector https://csrc.nist.gov/files/pubs/fips/197/final/docs/fips-197.pdf
         let key = hex!("000102030405060708090a0b0c0d0e0f");
         let mut plaintext = hex!("00112233445566778899aabbccddeeff");
         let expected = hex!("69c4e0d86a7b0430d8cdb78070b4c55a");
@@ -590,7 +676,7 @@ mod tests {
     }
     #[test]
     fn test_decryption() {
-        // Known-answer test vector from NIST FIPS 197.
+        //values taken from test vector https://csrc.nist.gov/files/pubs/fips/197/final/docs/fips-197.pdf
         let key = hex!("000102030405060708090a0b0c0d0e0f");
         let mut ciphertext = hex!("69c4e0d86a7b0430d8cdb78070b4c55a");
         let expected = hex!("00112233445566778899aabbccddeeff");
@@ -598,10 +684,3 @@ mod tests {
         assert_eq!(ciphertext, expected);
     }
 }
-```
-
----
-
-## Scope and security limitations
-
-This project implements the AES-128 block transformation and its inverse. It does **not** implement ECB, CBC, CTR or GCM mode, message padding, nonce management or authentication. In particular, a raw block cipher is not by itself a safe way to encrypt arbitrary messages. Do not use this educational implementation for real-world data; use a well-maintained authenticated-encryption library such as AES-GCM instead.
