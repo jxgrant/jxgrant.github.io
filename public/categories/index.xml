@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Jamie Grant</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>https://jxgrant.com/categories/</link>
     <description>Recent content in Categories on Jamie Grant</description>
-    <image>
-      <title>Jamie Grant</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Sat, 04 Apr 2026 19:39:13 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jxgrant.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Electronics</title>
-      <link>http://localhost:1313/categories/electronics/</link>
+      <link>https://jxgrant.com/categories/electronics/</link>
       <pubDate>Sat, 04 Apr 2026 19:39:13 +0100</pubDate>
-      <guid>http://localhost:1313/categories/electronics/</guid>
+      <guid>https://jxgrant.com/categories/electronics/</guid>
       <description></description>
     </item>
     <item>
       <title>Hacking</title>
-      <link>http://localhost:1313/categories/hacking/</link>
+      <link>https://jxgrant.com/categories/hacking/</link>
       <pubDate>Fri, 03 Apr 2026 22:49:18 +0100</pubDate>
-      <guid>http://localhost:1313/categories/hacking/</guid>
+      <guid>https://jxgrant.com/categories/hacking/</guid>
       <description></description>
     </item>
     <item>
       <title>Personal</title>
-      <link>http://localhost:1313/categories/personal/</link>
+      <link>https://jxgrant.com/categories/personal/</link>
       <pubDate>Mon, 30 Mar 2026 02:01:24 +0100</pubDate>
-      <guid>http://localhost:1313/categories/personal/</guid>
+      <guid>https://jxgrant.com/categories/personal/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cryptography</title>
+      <link>https://jxgrant.com/categories/cryptography/</link>
+      <pubDate>Tue, 19 Aug 2025 23:26:01 +0100</pubDate>
+      <guid>https://jxgrant.com/categories/cryptography/</guid>
       <description></description>
     </item>
   </channel>

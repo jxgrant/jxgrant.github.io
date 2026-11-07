@@ -1,33 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Electronics on Jamie Grant</title>
-    <link>http://localhost:1313/categories/electronics/</link>
+    <link>https://jxgrant.com/categories/electronics/</link>
     <description>Recent content in Electronics on Jamie Grant</description>
-    <image>
-      <title>Jamie Grant</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Sat, 04 Apr 2026 19:39:13 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/electronics/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jxgrant.com/categories/electronics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Electronics</title>
-      <link>http://localhost:1313/posts/electronics/</link>
+      <link>https://jxgrant.com/posts/electronics/</link>
       <pubDate>Sat, 04 Apr 2026 19:39:13 +0100</pubDate>
-      <guid>http://localhost:1313/posts/electronics/</guid>
-      <description>&lt;h2 id=&#34;my-plan&#34;&gt;My Plan&lt;/h2&gt;
-&lt;p&gt;My plan for the next year is to self learn some electronics supplementing my learning by joining a university society on the topic. Some reasourecs i have found to help me include the follwing:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.electronics-tutorials.ws&#34;&gt;https://www.electronics-tutorials.ws&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;projects&#34;&gt;Projects&lt;/h2&gt;
-&lt;p&gt;Some projects i will undertake include the following:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Shortwave Radio Transmitter Receiver Kit - Forty-9er 3W&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <guid>https://jxgrant.com/posts/electronics/</guid>
+      <description>&lt;h2 id=&#34;my-plan&#34;&gt;My Plan&lt;/h2&gt;&#xA;&lt;p&gt;My plan for the next year is to self learn some electronics supplementing my learning by joining a university society on the topic. Some reasourecs i have found to help me include the follwing:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.electronics-tutorials.ws&#34;&gt;https://www.electronics-tutorials.ws&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;projects&#34;&gt;Projects&lt;/h2&gt;&#xA;&lt;p&gt;Some projects i will undertake include the following:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Shortwave Radio Transmitter Receiver Kit - Forty-9er 3W&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
     </item>
   </channel>
 </rss>

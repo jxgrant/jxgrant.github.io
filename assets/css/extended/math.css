@@ -1,0 +1,14 @@
+/* Increase inline mathematics size */
+.math {
+    font-size: 1.2em;
+}
+
+/* Increase displayed mathematics size */
+mjx-container[display="true"] {
+    font-size: 125% !important;
+}
+
+/* Increase inline mathematics size */
+mjx-container:not([display="true"]) {
+    font-size: 115% !important;
+}

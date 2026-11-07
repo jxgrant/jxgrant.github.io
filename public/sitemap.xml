@@ -2,33 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://jxgrant.com/categories/</loc>
     <lastmod>2026-04-04T19:39:13+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/electronics/</loc>
+    <loc>https://jxgrant.com/categories/electronics/</loc>
     <lastmod>2026-04-04T19:39:13+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/electronics/</loc>
+    <loc>https://jxgrant.com/posts/electronics/</loc>
     <lastmod>2026-04-04T19:39:13+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://jxgrant.com/</loc>
     <lastmod>2026-04-04T19:39:13+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://jxgrant.com/posts/</loc>
     <lastmod>2026-04-04T19:39:13+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/hacking/</loc>
+    <loc>https://jxgrant.com/categories/hacking/</loc>
     <lastmod>2026-04-03T22:49:18+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/hacking/</loc>
+    <loc>https://jxgrant.com/posts/hacking/</loc>
     <lastmod>2026-04-03T22:49:18+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/first-post/</loc>
+    <loc>https://jxgrant.com/posts/about-me/</loc>
     <lastmod>2026-03-30T02:01:24+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/personal/</loc>
+    <loc>https://jxgrant.com/categories/personal/</loc>
     <lastmod>2026-03-30T02:01:24+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://jxgrant.com/categories/cryptography/</loc>
+    <lastmod>2025-08-19T23:26:01+01:00</lastmod>
+  </url><url>
+    <loc>https://jxgrant.com/posts/implementing-aes-128-in-rust/</loc>
+    <lastmod>2025-08-19T23:26:01+01:00</lastmod>
+  </url><url>
+    <loc>https://jxgrant.com/tags/</loc>
   </url>
 </urlset>

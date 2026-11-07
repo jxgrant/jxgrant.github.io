@@ -1,32 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hacking on Jamie Grant</title>
-    <link>http://localhost:1313/categories/hacking/</link>
+    <link>https://jxgrant.com/categories/hacking/</link>
     <description>Recent content in Hacking on Jamie Grant</description>
-    <image>
-      <title>Jamie Grant</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Fri, 03 Apr 2026 22:49:18 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/hacking/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jxgrant.com/categories/hacking/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hacking</title>
-      <link>http://localhost:1313/posts/hacking/</link>
+      <link>https://jxgrant.com/posts/hacking/</link>
       <pubDate>Fri, 03 Apr 2026 22:49:18 +0100</pubDate>
-      <guid>http://localhost:1313/posts/hacking/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;At university i attend a hacking club where i sometimes compete in Capture the flag competitions, the main areas that i focus on in these ctfs are cryptography and binary exploitation.&lt;/p&gt;
-&lt;h2 id=&#34;ctf-events&#34;&gt;Ctf Events&lt;/h2&gt;
-&lt;p&gt;Some ctf&amp;rsquo;s i have attended during my time at university include.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Pwned7 Qualifiers&lt;/li&gt;
-&lt;li&gt;Sheffield Siege&lt;/li&gt;
-&lt;li&gt;BAE CTF&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <guid>https://jxgrant.com/posts/hacking/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;At university i attend a hacking club where i sometimes compete in Capture the flag competitions, the main areas that i focus on in these ctfs are cryptography and binary exploitation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;ctf-events&#34;&gt;Ctf Events&lt;/h2&gt;&#xA;&lt;p&gt;Some ctf&amp;rsquo;s i have attended during my time at university include.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Pwned7 Qualifiers&lt;/li&gt;&#xA;&lt;li&gt;Sheffield Siege&lt;/li&gt;&#xA;&lt;li&gt;BAE CTF&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
     </item>
   </channel>
 </rss>

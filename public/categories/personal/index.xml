@@ -1,41 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Personal on Jamie Grant</title>
-    <link>http://localhost:1313/categories/personal/</link>
+    <link>https://jxgrant.com/categories/personal/</link>
     <description>Recent content in Personal on Jamie Grant</description>
-    <image>
-      <title>Jamie Grant</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Mon, 30 Mar 2026 02:01:24 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/personal/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jxgrant.com/categories/personal/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>First Post</title>
-      <link>http://localhost:1313/posts/first-post/</link>
+      <title>About Me</title>
+      <link>https://jxgrant.com/posts/about-me/</link>
       <pubDate>Mon, 30 Mar 2026 02:01:24 +0100</pubDate>
-      <guid>http://localhost:1313/posts/first-post/</guid>
-      <description>&lt;h2 id=&#34;who-am-i&#34;&gt;Who am i&lt;/h2&gt;
-&lt;p&gt;My name is Jamie Grant and i am a student studying a Mathematics.&lt;/p&gt;
-&lt;h2 id=&#34;what-i-do&#34;&gt;What i do&lt;/h2&gt;
-&lt;p&gt;My hobbies include but are not limited to:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Mathematics&lt;/li&gt;
-&lt;li&gt;Cryptography&lt;/li&gt;
-&lt;li&gt;Hacking&lt;/li&gt;
-&lt;li&gt;Amateur Radio&lt;/li&gt;
-&lt;li&gt;Programming&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;my-goals&#34;&gt;My goals&lt;/h2&gt;
-&lt;p&gt;My goals for the next few years include the following:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Gain a underestanding of quantum mechanics.&lt;/li&gt;
-&lt;li&gt;Gain pratical experience with soldering and electronics&lt;/li&gt;
-&lt;li&gt;Earn a RSGB radio intermediate license.&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <guid>https://jxgrant.com/posts/about-me/</guid>
+      <description>&lt;h2 id=&#34;who-am-i&#34;&gt;Who am i&lt;/h2&gt;&#xA;&lt;p&gt;My name is Jamie Grant and i am a student studying a Mathematics.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-i-do&#34;&gt;What i do&lt;/h2&gt;&#xA;&lt;p&gt;My hobbies include but are not limited to:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Mathematics&lt;/li&gt;&#xA;&lt;li&gt;Cryptography&lt;/li&gt;&#xA;&lt;li&gt;Hacking&lt;/li&gt;&#xA;&lt;li&gt;Amateur Radio&lt;/li&gt;&#xA;&lt;li&gt;Programming&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
     </item>
   </channel>
 </rss>

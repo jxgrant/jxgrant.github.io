@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cryptography on Jamie Grant</title>
+    <link>https://jxgrant.com/categories/cryptography/</link>
+    <description>Recent content in Cryptography on Jamie Grant</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 19 Aug 2025 23:26:01 +0100</lastBuildDate>
+    <atom:link href="https://jxgrant.com/categories/cryptography/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Implementing AES-128 in Rust</title>
+      <link>https://jxgrant.com/posts/implementing-aes-128-in-rust/</link>
+      <pubDate>Tue, 19 Aug 2025 23:26:01 +0100</pubDate>
+      <guid>https://jxgrant.com/posts/implementing-aes-128-in-rust/</guid>
+      <description>&lt;h1 id=&#34;implementing-aes-128-in-rust-from-finite-fields-to-encryption&#34;&gt;Implementing AES-128 in Rust: From Finite Fields to Encryption&lt;/h1&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;The Advanced Encryption Standard (AES), based on the Rijndael cipher, is a symmetric-key block cipher standardised by the US National Institute of Standards and Technology (NIST) in 2001. AES always operates on 128-bit blocks and supports three key sizes: 128, 192 and 256 bits. These variants use 10, 12 and 14 rounds respectively.&lt;/p&gt;&#xA;&lt;p&gt;AES is widely used in security protocols and applications. It is important to distinguish the block cipher itself from a &lt;em&gt;mode of operation&lt;/em&gt;: AES defines how to transform one 128-bit block, while modes such as CBC, CTR and GCM specify how to use a block cipher to protect longer messages.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
